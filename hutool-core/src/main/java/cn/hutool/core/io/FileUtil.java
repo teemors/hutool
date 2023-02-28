@@ -32,9 +32,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.LineNumberReader;
@@ -623,7 +621,7 @@ public class FileUtil extends PathUtil {
 		if (null == file) {
 			return null;
 		}
-		if (false == file.exists()) {
+		if (!file.exists()) {
 			mkParentDirs(file);
 			try {
 				//noinspection ResultOfMethodCallIgnored
@@ -1790,8 +1788,7 @@ public class FileUtil extends PathUtil {
 	 */
 	public static BOMInputStream getBOMInputStream(final File file) throws IORuntimeException {
 		try {
-			//noinspection IOStreamConstructor
-			return new BOMInputStream(new FileInputStream(file));
+			return new BOMInputStream(Files.newInputStream(file.toPath()));
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -2335,8 +2332,7 @@ public class FileUtil extends PathUtil {
 	public static BufferedOutputStream getOutputStream(final File file) throws IORuntimeException {
 		final OutputStream out;
 		try {
-			//noinspection IOStreamConstructor
-			out = new FileOutputStream(touch(file));
+			out = Files.newOutputStream(touch(file).toPath());
 		} catch (final IOException e) {
 			throw new IORuntimeException(e);
 		}
@@ -3286,7 +3282,7 @@ public class FileUtil extends PathUtil {
 	private static File buildFile(File outFile, String fileName) {
 		// 替换Windows路径分隔符为Linux路径分隔符，便于统一处理
 		fileName = fileName.replace('\\', '/');
-		if (false == isWindows()
+		if (!isWindows()
 				// 检查文件名中是否包含"/"，不考虑以"/"结尾的情况
 				&& fileName.lastIndexOf(CharUtil.SLASH, fileName.length() - 2) > 0) {
 			// 在Linux下多层目录创建存在问题，/会被当成文件名的一部分，此处做处理

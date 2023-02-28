@@ -691,7 +691,7 @@ public class IoUtil extends NioUtil {
 		if (null == in) {
 			return null;
 		}
-		if (false == in.markSupported()) {
+		if (!in.markSupported()) {
 			return new BufferedInputStream(in);
 		}
 		return in;
@@ -775,7 +775,7 @@ public class IoUtil extends NioUtil {
 	}
 
 	/**
-	 * 将byte[]写到流中，并关闭目标流
+	 * 将byte[]写到流中，但不关闭目标流
 	 *
 	 * @param out     输出流
 	 * @param content 写入的内容
@@ -893,10 +893,10 @@ public class IoUtil extends NioUtil {
 	 * @since 4.0.6
 	 */
 	public static boolean contentEquals(InputStream input1, InputStream input2) throws IORuntimeException {
-		if (false == (input1 instanceof BufferedInputStream)) {
+		if (!(input1 instanceof BufferedInputStream)) {
 			input1 = new BufferedInputStream(input1);
 		}
-		if (false == (input2 instanceof BufferedInputStream)) {
+		if (!(input2 instanceof BufferedInputStream)) {
 			input2 = new BufferedInputStream(input2);
 		}
 
